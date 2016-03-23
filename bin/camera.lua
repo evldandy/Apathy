@@ -1,10 +1,5 @@
--- Camera
-camera = {}
-camera.x = 0
-camera.y = 0
-camera.scaleX = 1
-camera.scaleY = 1
-camera.rotation = 0
+-- Initialize Camera
+camera = { x = 0, y = 0, scaleX = 1, scaleY = 1, rotation = 0 }
 
 function camera:set()
   love.graphics.push()
@@ -36,6 +31,7 @@ function camera:setPosition(x, y)
   self.x = x or self.x
   self.y = y or self.y
 end
+
 function camera:setScale(sx, sy)
   self.scaleX = sx or self.scaleX
   self.scaleY = sy or self.scaleY

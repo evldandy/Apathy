@@ -9,6 +9,7 @@ isGameOver = false
 isDead = false
 isPaused = false
 isOoF = false
+dir = love.filesystem.getSaveDirectory()
 
 -- Player information
 
@@ -22,7 +23,11 @@ function love.load()
   love.graphics.setBackgroundColor(56, 82, 102)
   vin = love.graphics.newImage('assets/images/hud/vin.png')
   hp_container = love.graphics.newImage('assets/images/hud/health_container.png')
-  player = { img = love.graphics.newImage('assets/images/player.png'), x = width / 2, y = height / 2, speed = 150, health = 10, energy = 3, }
+  -- Player stuff
+  player = { img = love.graphics.newImage('assets/images/player.png'), speed = 150, health = 10, energy = 3, sx = 2 }
+  player.x = (width / 2) - (player.img:getWidth() / 2)
+  player.y = (height / 2) - (player.img:getHeight() / 2)
+  -- Player stats
   energy = { img1 = love.graphics.newImage('assets/images/hud/energy1.png'),
              img2 = love.graphics.newImage('assets/images/hud/energy2.png'),
              img3 = love.graphics.newImage('assets/images/hud/energy3.png'),
@@ -91,6 +96,31 @@ function love.update(dt)
     isGameOver = true
   end
 
+  function checkSaveDir()
+    -- Checks if save file directory created
+    love.filesystem.exists(dir)
+  end
+
+  if checkSaveDir() == false then
+    love.filesystem.createDirectory(dir)
+  end
+
+  if love.keyboard.isDown('up', 'w') then
+    player.y = player.y - (player.speed * dt)
+  end
+  if love.keyboard.isDown('down', 's') then
+    player.y = player.y + (player.speed * dt)
+  end
+  if love.keyboard.isDown('right', 'd') then
+    player.x = player.x + (player.speed * dt)
+    player.sx = 2
+  end
+  if love.keyboard.isDown('left', 'a') then
+    player.x = player.x - (player.speed * dt)
+    player.sx = -2
+  end
+
+
   function gameReset()
     player.health = 10
     player.energy = 3
@@ -106,12 +136,12 @@ end
 
 function love.draw()
 camera:set()
+
 playersHealth(health.x, health.y)
 love.graphics.draw(vin, camera.x, camera.y)
 love.graphics.draw(hp_container, health.x, health.y)
-love.graphics.print(player.health, width / 2, height / 2)
+love.graphics.draw(player.img, player.x, player.y, nil, player.sx, 2)
 playersEnergy()
-
 
 camera:unset()
 end

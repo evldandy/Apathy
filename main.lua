@@ -21,81 +21,43 @@ function love.load()
   height = love.graphics.getHeight()
   love.graphics.setBackgroundColor(56, 82, 102)
   vin = love.graphics.newImage('assets/images/hud/vin.png')
-  hp_container = love.graphics.newImage('assets/images/hud/health_container.png')
-  player = { img = love.graphics.newImage('assets/images/player.png'), x = width / 2, y = height / 2, speed = 150, health = 10, energy = 3, }
-  energy = { img1 = love.graphics.newImage('assets/images/hud/energy1.png'),
-             img2 = love.graphics.newImage('assets/images/hud/energy2.png'),
-             img3 = love.graphics.newImage('assets/images/hud/energy3.png'),
-             blank = love.graphics.newImage('assets/images/blank.png'),
-             x = camera.x + 70, y = camera.y + 10 }
-  health = { img1 = love.graphics.newImage('assets/images/hud/health1.png'),
-             img2 = love.graphics.newImage('assets/images/hud/health2.png'),
-             img3 = love.graphics.newImage('assets/images/hud/health3.png'),
-             img4 = love.graphics.newImage('assets/images/hud/health4.png'),
-             img5 = love.graphics.newImage('assets/images/hud/health5.png'),
-             img6 = love.graphics.newImage('assets/images/hud/health6.png'),
-             img7 = love.graphics.newImage('assets/images/hud/health7.png'),
-             img8 = love.graphics.newImage('assets/images/hud/health8.png'),
-             img9 = love.graphics.newImage('assets/images/hud/health9.png'),
-             img10 = love.graphics.newImage('assets/images/hud/health10.png'),
-             blank = love.graphics.newImage('assets/images/blank.png'),
-             x = camera.x + 5, y = camera.y + 5 }
+  player = { img = love.graphics.newImage('assets/images/player.png'), x = width / 2, y = height / 2, speed = 150, health = 33, stamina = 100, }
+  hscontainer = { img = love.graphics.newImage('assets/images/hud/hscon.png'), x = camera.x, y = camera.y }
+  health = { img = love.graphics.newImage('assets/images/hud/health.png') }
+  stamina = { img = love.graphics.newImage('assets/images/hud/stamina.png') }
+
+
 end
 
 function love.update(dt)
 
-  function playersHealth(x, y)
-    if player.health == 1 then
-      love.graphics.draw(health.img1, x, y)
-    elseif player.health == 2 then
-      love.graphics.draw(health.img2, x, y)
-    elseif player.health == 3 then
-      love.graphics.draw(health.img3, x, y)
-    elseif player.health == 4 then
-      love.graphics.draw(health.img4, x, y)
-    elseif player.health == 5 then
-      love.graphics.draw(health.img5, x, y)
-    elseif player.health == 6 then
-      love.graphics.draw(health.img6, x, y)
-    elseif player.health == 7 then
-      love.graphics.draw(health.img7, x, y)
-    elseif player.health == 8 then
-      love.graphics.draw(health.img8, x, y)
-    elseif player.health == 9 then
-      love.graphics.draw(health.img9, x, y)
-    elseif player.health == 10 then
-      love.graphics.draw(health.img10, x, y)
-    elseif player.health == 0 then
-      love.graphics.draw(health.blank, x, y)
-    end
+  function playerHealth(sx)
+    health.sx = player.health / 100
+    love.graphics.draw(health.img, hscontainer.x, hscontainer.y, 0, sx, 1)
   end
-  function playersEnergy()
-    if player.energy == 1 then
-      love.graphics.draw(energy.img1, energy.x, energy.y)
-    end
-    if player.energy == 2 then
-      love.graphics.draw(energy.img2, energy.x, energy.y)
-    end
-    if player.energy == 3 then
-      love.graphics.draw(energy.img3, energy.x, energy.y)
-    end
-    if player.energy == 0 then
-      love.graphics.draw(energy.blank, energy.x, energy.y)
-    end
+
+  function playerStamina(sx)
+    stamina.sx = player.stamina / 100
+    love.graphics.draw(stamina.img, hscontainer.x, hscontainer.y, 0, sx, 1)
   end
 
   if love.keyboard.isDown('1') then
-    player.health = 9
+    player.health = 25
+    player.stamina = 76
   end
   if love.keyboard.isDown('2') then
     isGameOver = true
   end
 
   function gameReset()
-    player.health = 10
-    player.energy = 3
+    player.health = 100
+    player.stamina = 100
     isDead = false
     isGameOver = false
+  end
+
+  if player.health <= 0 then
+    isGameOver = true
   end
 
   if isGameOver then
@@ -106,12 +68,11 @@ end
 
 function love.draw()
 camera:set()
-playersHealth(health.x, health.y)
 love.graphics.draw(vin, camera.x, camera.y)
-love.graphics.draw(hp_container, health.x, health.y)
-love.graphics.print(player.health, width / 2, height / 2)
-playersEnergy()
-
+playerHealth(health.sx)
+playerStamina(stamina.sx)
+love.graphics.draw(hscontainer.img, hscontainer.x, hscontainer.y)
+love.graphics.print(health.sx, width / 2, height / 2)
 
 camera:unset()
 end

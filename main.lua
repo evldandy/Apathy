@@ -23,6 +23,9 @@ function love.load()
   height = love.graphics.getHeight()
   love.graphics.setBackgroundColor(56, 82, 102)
   vin = love.graphics.newImage('assets/images/hud/vin.png')
+  tilesheet = love.graphics.newImage('assets/images/tilesheet.png')
+  monolithP = love.graphics.newQuad(0, 0, 64, 64, 512, 512)
+  monolithG = love.graphics.newQuad(64, 0, 64, 64, 512, 512)
 
   player = { img = love.graphics.newImage('assets/images/player.png'), x = width / 2, y = height / 2, speed = 150, health = 100, stamina = 100, }
   hscontainer = { img = love.graphics.newImage('assets/images/hud/hscon.png'), x = camera.x, y = camera.y }
@@ -86,6 +89,7 @@ function love.update(dt)
   end
 
 
+
   function gameReset()
     player.health = 100
     player.stamina = 100
@@ -102,6 +106,8 @@ function love.update(dt)
   end
 
   function gameInitiate()
+    love.graphics.draw(tilesheet, monolithP, 0, 12)
+    love.graphics.draw(tilesheet, monolithG, 0, 64)
     love.graphics.draw(vin, camera.x, camera.y)
     playerHealth(health.sx)
     playerStamina(stamina.sx)
@@ -115,7 +121,6 @@ end
 function love.draw()
 camera:set()
 drawTitle()
-
 
 camera:unset()
 end

@@ -1,5 +1,6 @@
 -- require
 require('bin/camera')
+require('bin/title')
 
 -- Debug info
 debug = true
@@ -28,15 +29,19 @@ function love.load()
   health = { img = love.graphics.newImage('assets/images/hud/health.png') }
   stamina = { img = love.graphics.newImage('assets/images/hud/stamina.png') }
   -- Player stuff
-  player = { img = love.graphics.newImage('assets/images/player.png'), speed = 150, health = 10, energy = 3, sx = 2 }
+  player = { img = love.graphics.newImage('assets/images/player.png'), speed = 150, health = 100, stamina = 100, sx = 2 }
   player.x = (width / 2) - (player.img:getWidth() / 2)
   player.y = (height / 2) - (player.img:getHeight() / 2)
   -- Player stats
-  stamina = { img = love.graphics.newImage('assets/images/hud/stamina.png'), sx = player.stamina / 100
+  stamina = { img = love.graphics.newImage('assets/images/hud/stamina.png'), sx = player.stamina / 100 }
   health = { img = love.graphics.newImage('assets/images/hud/health.png'), sx = player.health / 100 }
 end
 
 function love.update(dt)
+
+  if love.keyboard.isDown('escape') then
+    love.event.quit()
+  end
 
   function playerHealth(sx)
     health.sx = player.health / 100
@@ -96,17 +101,21 @@ function love.update(dt)
     gameReset()
   end
 
+  function gameInitiate()
+    love.graphics.draw(vin, camera.x, camera.y)
+    playerHealth(health.sx)
+    playerStamina(stamina.sx)
+    love.graphics.draw(hscontainer.img, hscontainer.x, hscontainer.y)
+    love.graphics.draw(player.img, player.x, player.y, nil, player.sx, 2, 16)
+    love.graphics.draw(vin, camera.x, camera.y)
+  end
+
 end
 
 function love.draw()
 camera:set()
+drawTitle()
 
-love.graphics.draw(vin, camera.x, camera.y)
-playerHealth(health.sx)
-playerStamina(stamina.sx)
-love.graphics.draw(hscontainer.img, hscontainer.x, hscontainer.y)
-love.graphics.draw(player.img, player.x, player.y, nil, player.sx, 2)
-love.graphics.draw(vin, camera.x, camera.y)
 
 camera:unset()
 end
